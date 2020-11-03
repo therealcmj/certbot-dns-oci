@@ -98,6 +98,8 @@ class _OCIDNSClient(object):
         #  - an addition of the same name + value (but different TTL) as an update to the TTL
         # it does NOT throw an error in either case.
 
+        logger.debug("Setting record %s in zone %s to value %s w/ TTL %d", record_name, zone_ocid, record_content, record_ttl)
+
         result = self.dns_client.patch_domain_records(
             zone_name,
             record_name,
