@@ -1,8 +1,6 @@
 """DNS Authenticator for OCI."""
 import logging
 
-import zope.interface
-
 from certbot import errors
 from certbot import interfaces
 from certbot.plugins import dns_common
@@ -11,8 +9,7 @@ import oci
 
 logger = logging.getLogger(__name__)
 
-@zope.interface.implementer(interfaces.IAuthenticator)
-@zope.interface.provider(interfaces.IPluginFactory)
+
 class Authenticator(dns_common.DNSAuthenticator):
     """DNS Authenticator for Oracle Cloud Infrastructure DNS service
 
@@ -24,16 +21,16 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def __init__(self, *args, **kwargs):
         super(Authenticator, self).__init__(*args, **kwargs)
-        self.credentials = None
+        # self.credentials = None
 
     @classmethod
-    def add_parser_arguments(cls, add):  # pylint: disable=arguments-differ
+    def add_parser_arguments(cls, add, **kwargs):  # pylint: disable=arguments-differ
         super(Authenticator, cls).add_parser_arguments(
             add, default_propagation_seconds=15
         )
         # TODO: implement these:
-        # add('config', help="OCI CLI Configuration file.")
-        # add('profile', help="OCI configuration profile (in OCI configuration file)")
+        add('config', help="OCI CLI Configuration file.")
+        add('profile', help="OCI configuration profile (in OCI configuration file)")
 
     def more_info(self):  # pylint: disable=missing-docstring,no-self-use
         return (
@@ -42,9 +39,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _setup_credentials(self):
-        # TODO: implement code here to handle add support for:
-        #   Resource or Instance principals
-        #   non-"DEFAULT" configurations
+        # There is no code here
         return
 
     def _perform(self, domain, validation_name, validation):
@@ -59,6 +54,7 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def _get_ocidns_client(self):
         return _OCIDNSClient()
+
 
 class _OCIDNSClient(object):
     """
@@ -98,7 +94,8 @@ class _OCIDNSClient(object):
         #  - an addition of the same name + value (but different TTL) as an update to the TTL
         # it does NOT throw an error in either case.
 
-        logger.debug("Setting record %s in zone %s to value %s w/ TTL %d", record_name, zone_ocid, record_content, record_ttl)
+        logger.debug("Setting record %s in zone %s to value %s w/ TTL %d",
+                     record_name, zone_ocid, record_content, record_ttl)
 
         result = self.dns_client.patch_domain_records(
             zone_name,
@@ -180,4 +177,3 @@ class _OCIDNSClient(object):
             except errors.PluginError as e:
                 pass
         return None, None
-

@@ -4,8 +4,8 @@ from setuptools import find_packages
 version = "0.1.0"
 
 install_requires = [
-    "acme>=1.7.0",
-    "certbot>=1.7.0",
+    "acme>=1.31.0",
+    "certbot>=1.31.0",
     "setuptools",
     "mock",
     "oci"
@@ -28,19 +28,19 @@ setup(
     author="Chris Johnson",
     author_email="christopher.johnson@oracle.com",
     license="Apache License 2.0",
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+    python_requires=">=3.10",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: Plugins",
         "Intended Audience :: System Administrators",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: POSIX :: Linux",
-        # I only tested this with Python 3.8 and 2.x is dead
+        # I only tested this with Python 3.10
         # so I'm not going to include any Python 2 options here
-        # and I'm omitting everything before Python 3.8
+        # and I'm omitting everything before Python 3.10
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Security",
         "Topic :: System :: Installation/Setup",
