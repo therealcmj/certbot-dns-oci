@@ -39,8 +39,11 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _setup_credentials(self):
-        # There is no code here
-        return
+        # implement profile - full implementation of config file is WIP
+        oci_config_profile = 'DEFAULT'
+        if self.conf('profile') is not None:
+            oci_config_profile = self.conf('profile')
+        self.credentials = oci.config.from_file(profile_name=oci_config_profile)
 
     def _perform(self, domain, validation_name, validation):
         self._get_ocidns_client().add_txt_record(
@@ -53,10 +56,10 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _get_ocidns_client(self):
-        return _OCIDNSClient()
+        return _OCIDNSClient(self.credentials)
 
 
-class _OCIDNSClient(object):
+class _OCIDNSClient:
     """
     This class handles calling OCI SDK / REST API needed for this use case.
     This is a FAR from complete implementation of anything and is really
@@ -64,11 +67,11 @@ class _OCIDNSClient(object):
     In Other Words: thar be dragons
     """
 
-    def __init__(self):
+    def __init__(self, oci_config):
         logger.debug("creating OCI DnsClient")
         # this is where you would add code to handle Resource, Instance, or non-default configs
         config = oci.config.from_file()
-        self.dns_client = oci.dns.DnsClient(config)
+        self.dns_client = oci.dns.DnsClient(oci_config)
 
     def add_txt_record(self, domain, record_name, record_content, record_ttl):
         """
