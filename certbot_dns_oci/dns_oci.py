@@ -50,7 +50,8 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def _setup_credentials(self):
         # Add argument for instance principal
-        pprint(self.conf)
+        logger.critical(pprint(self.conf))
+        
         if self.conf('instance-principal'):
             self.credentials = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
         else:
