@@ -72,7 +72,7 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def _get_ocidns_client(self):
         if self.conf('instance-principal') is not None:
-            return _OCIDNSClient()
+            return _OCIDNSClient(None)
         else:
             return _OCIDNSClient(self.credentials)
 
@@ -85,17 +85,18 @@ class _OCIDNSClient:
     In Other Words: thar be dragons
     """
 
-    def __init__(self, oci_config):
-        logger.debug("creating OCI DnsClient Using Config File")
-        # this is where you would add code to handle Resource, Instance, or non-default configs
-        config = oci.config.from_file()
-        self.dns_client = oci.dns.DnsClient(oci_config)
+    def __init__(self, oci_config=None):
+        if oci_config is not None:
+            logger.debug("creating OCI DnsClient Using Config File")
+            # this is where you would add code to handle Resource, Instance, or non-default configs
+            config = oci.config.from_file()
+            self.dns_client = oci.dns.DnsClient(oci_config)
+        else:
+            logger.debug("creating OCI DnsClient Using Instance Principal")
+            # this is where you would add code to handle Resource, Instance, or non-default configs
+            signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            self.dns_client = oci.dns.DnsClient(config={}, signer=signer)
 
-    def __init__(self):
-        logger.debug("creating OCI DnsClient Using Instance Principal")
-        # this is where you would add code to handle Resource, Instance, or non-default configs
-        signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-        self.dns_client = oci.dns.DnsClient(config={}, signer=signer)
 
     def add_txt_record(self, domain, record_name, record_content, record_ttl):
         """
