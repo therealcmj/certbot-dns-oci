@@ -83,7 +83,7 @@ class _OCIDNSClient:
     In Other Words: thar be dragons
     """
 
-    def __init__(self, oci.oci_config):
+    def __init__(self, oci):
         logger.debug("creating OCI DnsClient Using Config File")
         # this is where you would add code to handle Resource, Instance, or non-default configs
         config = oci.config.from_file()
