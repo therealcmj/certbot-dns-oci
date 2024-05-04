@@ -38,7 +38,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Validate options to ensure that conflicting arguments are not provided together
         if self.conf('instance-principal') and self.conf('config'):
             raise errors.PluginError(
-                "Conflicting arguments: '--oci-dns-instance-principal' and '--oci-dns-config' cannot be provided together."
+                "Conflicting arguments: '--dns-oci-instance-principal' and '--dns-oci-config' cannot be provided together."
             )
 
     def more_info(self):  # pylint: disable=missing-docstring,no-self-use
@@ -51,16 +51,12 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Validate options
         self.validate_options()
 
-        # Add argument for instance principal
-    
-        if self.conf('instance-principal'):
-            self.ip = True
-        else:
-        # implement profile - full implementation of config file is WIP
-            oci_config_profile = 'DEFAULT'
-            if self.conf('profile') is not None:
+
+        oci_config_profile = 'DEFAULT'
+        if self.conf('profile') is not None:
                 oci_config_profile = self.conf('profile')
                 self.credentials = oci.config.from_file(profile_name=oci_config_profile)
+
 
     def _perform(self, domain, validation_name, validation):
         self._get_ocidns_client().add_txt_record(
@@ -73,7 +69,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _get_ocidns_client(self):
-        if self.ip is not None:
+        if self.conf('instance-principal') is not None:
             return _OCIDNSClient()
         else:
             return _OCIDNSClient(self.credentials)
