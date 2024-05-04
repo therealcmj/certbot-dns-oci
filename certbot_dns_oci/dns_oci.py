@@ -115,7 +115,7 @@ class _OCIDNSClient:
         # first find the domain
         zone_ocid, zone_name = self._find_managed_zone(domain, record_name)
         if zone_name is None:
-            raise errors.PluginError("Domain not known")
+            raise errors.PluginError("Domain not known. Please Make sure the domain is in OCI DNS and You have the correct permissions.")
         logger.debug("Found domain %s with OCID %s", zone_name, zone_ocid)
 
         # NOTE: the OCI SDK will treat:
