@@ -25,7 +25,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         # self.credentials = None
 
     @classmethod
-    def add_parser_arguments(cls, add, **kwargs):  # pylint: disable=arguments-differ
+    def add_parser_arguments(cls, add):  # pylint: disable=arguments-differ
         super(Authenticator, cls).add_parser_arguments(
             add, default_propagation_seconds=15
         )
@@ -49,9 +49,11 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _setup_credentials(self):
+        # Validate options
+        self.validate_options()
+
         # Add argument for instance principal
-        logger.critical(pprint(self.conf))
-        
+    
         if self.conf('instance-principal'):
             self.credentials = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
         else:
