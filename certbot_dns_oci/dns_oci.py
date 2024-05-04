@@ -55,7 +55,7 @@ class Authenticator(dns_common.DNSAuthenticator):
     
         if self.conf('instance-principal'):
             self.signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-            self.credentials = oci.config.from_signer(self.signer)
+            self.credentials = None
         else:
         # implement profile - full implementation of config file is WIP
             oci_config_profile = 'DEFAULT'
