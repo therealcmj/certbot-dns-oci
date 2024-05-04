@@ -4,7 +4,6 @@ import logging
 from certbot import errors
 from certbot import interfaces
 from certbot.plugins import dns_common
-from pprint import pprint
 
 import oci
 
@@ -55,7 +54,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Add argument for instance principal
     
         if self.conf('instance-principal'):
-            self.credentials = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+            self.signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
         else:
         # implement profile - full implementation of config file is WIP
             oci_config_profile = 'DEFAULT'
@@ -87,9 +86,14 @@ class _OCIDNSClient:
 
     def __init__(self, oci_config):
         logger.debug("creating OCI DnsClient")
-        # this is where you would add code to handle Resource, Instance, or non-default configs
-        config = oci.config.from_file()
-        self.dns_client = oci.dns.DnsClient(oci_config)
+        if self.signer is not None:
+            self.dns_client = oci.dns.DnsClient(self.signer)
+            logger.debug("Using Instance Principal for authentication.")
+        else:
+            # this is where you would add code to handle Resource, Instance, or non-default configs
+            config = oci.config.from_file()
+            self.dns_client = oci.dns.DnsClient(config={}, signer=self.signer)
+            logger.debug("Using config file for authentication.")
 
     def add_txt_record(self, domain, record_name, record_content, record_ttl):
         """
