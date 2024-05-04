@@ -93,7 +93,9 @@ To acquire a TEST certificate for demosite.ociateam.com:
      --logs-dir logs --work-dir work --config-dir config \
      --authenticator dns-oci -d demosite.ociateam.com
 
+
 To acquire a TEST certificate for demosite.ociateam.com using instance principal:
+
 .. code-block:: bash
 
     certbot --test-cert certonly \
@@ -109,7 +111,9 @@ To acquire a *real* certificate for demosite.ociateam.com:
      --logs-dir logs --work-dir work --config-dir config \
      --authenticator dns-oci -d demosite.ociateam.com
 
+
 To acquire a *real* certificate for demosite.ociateam.com using instance principal:
+
 .. code-block:: bash
 
     certbot certonly \
