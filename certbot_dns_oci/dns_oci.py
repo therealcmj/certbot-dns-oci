@@ -54,8 +54,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Add argument for instance principal
     
         if self.conf('instance-principal'):
-            self.signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-            self.credentials = None
+            self.ip = True
         else:
         # implement profile - full implementation of config file is WIP
             oci_config_profile = 'DEFAULT'
@@ -74,7 +73,10 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _get_ocidns_client(self):
-        return _OCIDNSClient(self.credentials)
+        if self.ip is not None:
+            return _OCIDNSClient()
+        else:
+            return _OCIDNSClient(self.credentials)
 
 
 class _OCIDNSClient:
@@ -86,15 +88,16 @@ class _OCIDNSClient:
     """
 
     def __init__(self, oci_config):
-        logger.debug("creating OCI DnsClient")
-        if self.signer is not None:
-            self.dns_client = oci.dns.DnsClient(self.signer)
-            logger.debug("Using Instance Principal for authentication.")
-        else:
-            # this is where you would add code to handle Resource, Instance, or non-default configs
-            config = oci.config.from_file()
-            self.dns_client = oci.dns.DnsClient(config={}, signer=self.signer)
-            logger.debug("Using config file for authentication.")
+        logger.debug("creating OCI DnsClient Using Config File")
+        # this is where you would add code to handle Resource, Instance, or non-default configs
+        config = oci.config.from_file()
+        self.dns_client = oci.dns.DnsClient(oci_config)
+
+    def __initt__(self):
+        logger.debug("creating OCI DnsClient Using Instance Principal")
+        # this is where you would add code to handle Resource, Instance, or non-default configs
+        signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+        self.dns_client = oci.dns.DnsClient(config={}, signer=signer)
 
     def add_txt_record(self, domain, record_name, record_content, record_ttl):
         """
