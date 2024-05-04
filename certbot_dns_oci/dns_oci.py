@@ -4,6 +4,7 @@ import logging
 from certbot import errors
 from certbot import interfaces
 from certbot.plugins import dns_common
+from pprint import pprint
 
 import oci
 
@@ -49,6 +50,7 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def _setup_credentials(self):
         # Add argument for instance principal
+        pprint(self.conf)
         if self.conf('instance-principal'):
             self.credentials = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
         else:
