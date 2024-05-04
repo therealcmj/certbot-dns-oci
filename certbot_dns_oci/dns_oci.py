@@ -50,12 +50,14 @@ class Authenticator(dns_common.DNSAuthenticator):
     def _setup_credentials(self):
         # Validate options
         self.validate_options()
-        self.credentials = oci.config.from_file()
+
+        if self.conf('instance-principal') is None:
+            self.credentials = oci.config.from_file()
         
-        oci_config_profile = 'DEFAULT'
-        if self.conf('profile') is not None:
-                oci_config_profile = self.conf('profile')
-                self.credentials = oci.config.from_file(profile_name=oci_config_profile)
+            oci_config_profile = 'DEFAULT'
+            if self.conf('profile') is not None:
+                    oci_config_profile = self.conf('profile')
+                    self.credentials = oci.config.from_file(profile_name=oci_config_profile)
 
 
     def _perform(self, domain, validation_name, validation):
