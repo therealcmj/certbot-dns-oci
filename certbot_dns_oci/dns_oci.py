@@ -93,7 +93,7 @@ class _OCIDNSClient:
         config = oci.config.from_file()
         self.dns_client = oci.dns.DnsClient(oci_config)
 
-    def __initt__(self):
+    def __init__(self):
         logger.debug("creating OCI DnsClient Using Instance Principal")
         # this is where you would add code to handle Resource, Instance, or non-default configs
         signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
