@@ -32,11 +32,11 @@ class Authenticator(dns_common.DNSAuthenticator):
         add('config', help="OCI CLI Configuration file.")
         add('profile', help="OCI configuration profile (in OCI configuration file)")
         # Add argument for instance principal
-        add('instance_principal',help="Use instance principal for authentication.")
+        add('dns-oci-instance-principal',help="Use instance principal for authentication.")
 
     def validate_options(self):
         # Validate options to ensure that conflicting arguments are not provided together
-        if self.conf('instance_principal') and self.conf('oci_config'):
+        if self.conf('dns-oci-instance_principal') and self.conf('oci_config'):
             raise errors.PluginError(
                 "Conflicting arguments: 'instance_principal' and 'oci_config' cannot be provided together."
             )
