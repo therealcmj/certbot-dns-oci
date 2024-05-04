@@ -39,7 +39,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Validate options to ensure that conflicting arguments are not provided together
         if self.conf('instance-principal') and self.conf('config'):
             raise errors.PluginError(
-                "Conflicting arguments: 'instance-principal' and 'config' cannot be provided together."
+                "Conflicting arguments: '--oci-dns-instance-principal' and '--oci-dns-config' cannot be provided together."
             )
 
     def more_info(self):  # pylint: disable=missing-docstring,no-self-use
