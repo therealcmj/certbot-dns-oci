@@ -34,6 +34,12 @@ class Authenticator(dns_common.DNSAuthenticator):
         # Add argument for instance principal
         add('instance_principal',help="Use instance principal for authentication.")
 
+    def validate_options(self):
+        # Validate options to ensure that conflicting arguments are not provided together
+        if self.conf('instance_principal') and self.conf('oci_config'):
+            raise errors.PluginError(
+                "Conflicting arguments: 'instance_principal' and 'oci_config' cannot be provided together."
+            )
 
     def more_info(self):  # pylint: disable=missing-docstring,no-self-use
         return (
