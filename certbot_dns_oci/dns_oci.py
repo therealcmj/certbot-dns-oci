@@ -55,7 +55,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         oci_config_profile = 'DEFAULT'
         if self.conf('profile') is not None:
                 oci_config_profile = self.conf('profile')
-                self.credentials = oci.config.from_file(profile_name=oci_config_profile)
+                self.oci.credentials = oci.config.from_file(profile_name=oci_config_profile)
 
 
     def _perform(self, domain, validation_name, validation):
@@ -72,7 +72,7 @@ class Authenticator(dns_common.DNSAuthenticator):
         if self.conf('instance-principal') is not None:
             return _OCIDNSClient()
         else:
-            return _OCIDNSClient(self.credentials)
+            return _OCIDNSClient(self.oci.credentials)
 
 
 class _OCIDNSClient:
@@ -83,11 +83,11 @@ class _OCIDNSClient:
     In Other Words: thar be dragons
     """
 
-    def __init__(self, oci_config):
+    def __init__(self, oci.oci_config):
         logger.debug("creating OCI DnsClient Using Config File")
         # this is where you would add code to handle Resource, Instance, or non-default configs
         config = oci.config.from_file()
-        self.dns_client = oci.dns.DnsClient(oci_config)
+        self.dns_client = oci.dns.DnsClient(oci.ci_config)
 
     def __init__(self):
         logger.debug("creating OCI DnsClient Using Instance Principal")
