@@ -77,7 +77,7 @@ This plug-in supports the following arguments on certbot's command line:
                                         before asking the ACME server to verify the DNS record.
                                         (Default: 15)
 
-``--dns-oci-instance-principal``                Use instance principal for authentication.
+``--dns-oci-instance-principal``        Use instance principal for authentication.
                                         (Optional)
 ======================================= ========================================================
 
