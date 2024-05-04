@@ -76,6 +76,9 @@ This plug-in supports the following arguments on certbot's command line:
 ``--dns-oci-propagation-seconds``       Amount of time to allow for the DNS change to propagate
                                         before asking the ACME server to verify the DNS record.
                                         (Default: 15)
+
+``--instance-principal``                Use instance principal for authentication.
+                                        (Optional)
 ======================================= ========================================================
 
 
@@ -90,6 +93,13 @@ To acquire a TEST certificate for demosite.ociateam.com:
      --logs-dir logs --work-dir work --config-dir config \
      --authenticator dns-oci -d demosite.ociateam.com
 
+To acquire a TEST certificate for demosite.ociateam.com using instance principal:
+.. code-block:: bash
+
+    certbot --test-cert certonly \
+     --logs-dir logs --work-dir work --instance-principal \
+     --authenticator dns-oci -d demosite.ociateam.com
+
 
 To acquire a *real* certificate for demosite.ociateam.com:
 
@@ -99,3 +109,9 @@ To acquire a *real* certificate for demosite.ociateam.com:
      --logs-dir logs --work-dir work --config-dir config \
      --authenticator dns-oci -d demosite.ociateam.com
 
+To acquire a *real* certificate for demosite.ociateam.com using instance principal:
+.. code-block:: bash
+
+    certbot certonly \
+     --logs-dir logs --work-dir work --instance-principal config \
+     --authenticator dns-oci -d demosite.ociateam.com
