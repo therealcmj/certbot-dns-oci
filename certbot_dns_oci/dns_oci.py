@@ -31,6 +31,9 @@ class Authenticator(dns_common.DNSAuthenticator):
         # TODO: implement these:
         add('config', help="OCI CLI Configuration file.")
         add('profile', help="OCI configuration profile (in OCI configuration file)")
+        # Add argument for instance principal
+        add('instance_principal',help="Use instance principal for authentication.")
+
 
     def more_info(self):  # pylint: disable=missing-docstring,no-self-use
         return (
@@ -39,11 +42,15 @@ class Authenticator(dns_common.DNSAuthenticator):
         )
 
     def _setup_credentials(self):
+        # Add argument for instance principal
+        if self.conf('instance_principal'):
+            self.credentials = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+        else:
         # implement profile - full implementation of config file is WIP
-        oci_config_profile = 'DEFAULT'
-        if self.conf('profile') is not None:
-            oci_config_profile = self.conf('profile')
-        self.credentials = oci.config.from_file(profile_name=oci_config_profile)
+            oci_config_profile = 'DEFAULT'
+            if self.conf('profile') is not None:
+                oci_config_profile = self.conf('profile')
+                self.credentials = oci.config.from_file(profile_name=oci_config_profile)
 
     def _perform(self, domain, validation_name, validation):
         self._get_ocidns_client().add_txt_record(
