@@ -17,6 +17,7 @@ To use this authenticator you will need:
 * a registered domain name, configured with the OCI DNS servers
 * that domain name created in OCI (via the console, the CLI, or the API)
 * an OCI account with adequate permission to Create / Update / Delete DNS entries in that domain
+* or instance principal setup on the target instance with the same permissions
 
 Installation
 ------------
@@ -75,7 +76,10 @@ This plug-in supports the following arguments on certbot's command line:
 
 ``--dns-oci-propagation-seconds``       Amount of time to allow for the DNS change to propagate
                                         before asking the ACME server to verify the DNS record.
-                                        (Default: 15)
+                                        (Default: 60)
+
+``--dns-oci-instance-principal``        Use instance principal for authentication.
+                                        (Optional) set this to 'y' to use instance principal
 ======================================= ========================================================
 
 
@@ -91,6 +95,15 @@ To acquire a TEST certificate for demosite.ociateam.com:
      --authenticator dns-oci -d demosite.ociateam.com
 
 
+To acquire a TEST certificate for demosite.ociateam.com using instance principal:
+
+.. code-block:: bash
+
+    certbot --test-cert certonly \
+     --logs-dir logs --work-dir work --dns-oci-instance-principal=y \
+     --authenticator dns-oci -d demosite.ociateam.com
+
+
 To acquire a *real* certificate for demosite.ociateam.com:
 
 .. code-block:: bash
@@ -99,3 +112,11 @@ To acquire a *real* certificate for demosite.ociateam.com:
      --logs-dir logs --work-dir work --config-dir config \
      --authenticator dns-oci -d demosite.ociateam.com
 
+
+To acquire a *real* certificate for demosite.ociateam.com using instance principal:
+
+.. code-block:: bash
+
+    certbot certonly \
+     --logs-dir logs --work-dir work --dns-oci-instance-principal=y \
+     --authenticator dns-oci -d demosite.ociateam.com
